@@ -70,7 +70,12 @@ export default function AccountOptions(props) {
         setIsVisibleModal(true);
         break;
       case "password":
-        setRenderComponent(<ChangePaswordForm />);
+        setRenderComponent(
+          <ChangePaswordForm
+            setIsVisibleModal={setIsVisibleModal}
+            toastRef={toastRef}
+          />
+        );
         setIsVisibleModal(true);
         break;
       default:
