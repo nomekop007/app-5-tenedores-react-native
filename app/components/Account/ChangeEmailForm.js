@@ -48,6 +48,7 @@ export default function ChangeEmailForm(props) {
       <Input
         placeholder="Correo electronico"
         containerStyle={styles.input}
+        maxLength={30}
         defaultValue={email && email}
         onChange={e => setnewEmail(e.nativeEvent.text)}
         rightIcon={{
@@ -60,6 +61,7 @@ export default function ChangeEmailForm(props) {
       <Input
         placeholder="Contraseña"
         containerStyle={styles.input}
+        maxLength={30}
         password={true}
         secureTextEntry={hidePassword}
         onChange={e => setPassword(e.nativeEvent.text)}

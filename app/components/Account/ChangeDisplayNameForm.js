@@ -41,6 +41,7 @@ export default function ChangeDisplayNameForm(props) {
     <View style={StyleSheet.view}>
       <Input
         placeholder="Nombre"
+        maxLength={30}
         containerStyle={styles.input}
         defaultValue={displayName && displayName}
         onChange={e => setNewDisplayName(e.nativeEvent.text)}

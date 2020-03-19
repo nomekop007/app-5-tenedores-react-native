@@ -71,6 +71,7 @@ export default function ChangePasswordForm(props) {
         placeholder="Contraseña actual"
         containerStyle={styles.input}
         password={true}
+        maxLength={30}
         secureTextEntry={hidePassword}
         onChange={e => setPasword(e.nativeEvent.text)}
         rightIcon={{
@@ -85,6 +86,7 @@ export default function ChangePasswordForm(props) {
         placeholder="Nueva contraseña"
         containerStyle={styles.input}
         password={true}
+        maxLength={30}
         secureTextEntry={hideNewPassword}
         onChange={e => setNewPassword(e.nativeEvent.text)}
         rightIcon={{
@@ -99,6 +101,7 @@ export default function ChangePasswordForm(props) {
         placeholder="Repetir nueva contraseña"
         containerStyle={styles.input}
         password={true}
+        maxLength={30}
         secureTextEntry={hideNewPasswordRepeat}
         onChange={e => setNewPasswordRepeat(e.nativeEvent.text)}
         rightIcon={{

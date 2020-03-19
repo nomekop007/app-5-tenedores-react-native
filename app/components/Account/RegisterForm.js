@@ -55,6 +55,7 @@ function RegisterForm(props) {
       <Input
         placeholder="Correo electronico"
         containerStyle={styles.inputFrom}
+        maxLength={30}
         onChange={e => setEmail(e.nativeEvent.text)}
         rightIcon={
           <Icon
@@ -67,6 +68,7 @@ function RegisterForm(props) {
       <Input
         placeholder="Contraseña"
         password={true} /* tipo contraseña */
+        maxLength={30}
         secureTextEntry={hidePassword} /* ocultar contraseña */
         containerStyle={styles.inputFrom}
         onChange={e => setPassword(e.nativeEvent.text)}
@@ -84,6 +86,7 @@ function RegisterForm(props) {
       <Input
         placeholder="Repetir Contraseña"
         password={true} /* tipo contraseña */
+        maxLength={30}
         secureTextEntry={hideRepeatPassword} /* ocultar contraseña */
         containerStyle={styles.inputFrom}
         onChange={e => setRepeatPassword(e.nativeEvent.text)}

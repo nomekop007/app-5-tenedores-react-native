@@ -43,6 +43,7 @@ function LoginForm(props) {
     <View style={styles.formContainer}>
       <Input
         placeholder="Correo electronico"
+        maxLength={30}
         containerStyle={styles.inputForm}
         onChange={e => setEmail(e.nativeEvent.text)}
         rightIcon={
@@ -58,6 +59,7 @@ function LoginForm(props) {
         placeholder="Contraseña"
         containerStyle={styles.inputForm}
         password={true}
+        maxLength={30}
         secureTextEntry={hidePassword}
         onChange={e => setPassword(e.nativeEvent.text)}
         rightIcon={
