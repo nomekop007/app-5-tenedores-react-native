@@ -71,7 +71,7 @@ const NavigationStacks = createBottomTabNavigator(
   },
   // configurar movilidad Tab
   {
-    initialRouteName: "Account", //donde inica el tab
+    initialRouteName: "Restaurants", //donde inicia el tab
     order: ["Restaurants", "TopLists", "Search", "Account"], //orden de tabs
     tabBarOptions: {
       inactiveTintColor: "#646464", //color tabs inactivos
