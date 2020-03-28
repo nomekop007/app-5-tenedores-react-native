@@ -7,6 +7,8 @@ import AddRestaurantForm from "../../components/Restaurants/AddRestaurantForm";
 export default function AddRestaurant(props) {
   /* extrae las propiedades de navigation de props */
   const { navigation } = props;
+  const { setIsReloadRestaurants } = navigation.state.params;
+
   /* se inicialisan el toast y el loading */
   const toastRef = useRef();
   const [isLoading, setIsLoading] = useState(false);
@@ -18,6 +20,7 @@ export default function AddRestaurant(props) {
         toastRef={toastRef}
         setIsLoading={setIsLoading}
         navigation={navigation}
+        setIsReloadRestaurants={setIsReloadRestaurants}
       />
       <Toast ref={toastRef} position="center" opacity={0.5} />
       <Loading isVisible={isLoading} text="Creando Restaurante" />

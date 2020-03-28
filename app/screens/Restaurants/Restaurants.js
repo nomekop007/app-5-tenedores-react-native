@@ -15,8 +15,9 @@ export default function Restaurants(props) {
   const [restaurants, setRestaurants] = useState([]);
   const [startRestorants, setStartRestorants] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [isReloadRestaurants, setIsReloadRestaurants] = useState(false);
   const [totalRestaurants, setTotalRestaurants] = useState(0);
-  const limitRestaurant = 8;
+  const limitRestaurant = 8; /* limites de restoranes cargados */
 
   /* extrae el usario logeado y lo almacena en user */
   useEffect(() => {
@@ -42,6 +43,7 @@ export default function Restaurants(props) {
       await restaurants.get().then(response => {
         setStartRestorants(response.docs[response.docs.length - 1]);
         /* recorriendo restauranes */
+
         response.forEach(doc => {
           let restaurant = doc.data();
           restaurant.id = doc.id;
@@ -51,24 +53,66 @@ export default function Restaurants(props) {
         setRestaurants(resultRestaurant);
       });
     })();
-  }, []);
+    setIsReloadRestaurants(false);
+  }, [isReloadRestaurants]);
+
+  const handleLoadMore = async () => {
+    const resultRestaurants = []; /* arreglo vacio */
+    restaurants.length < totalRestaurants && setIsLoading(true);
+
+    /* guardando el json de restoranes de la base de datos */
+    const restaurantsDB = db
+      .collection("restaurants")
+      .orderBy("createAt", "desc")
+      .startAfter(startRestorants.data().createAt)
+      .limit(limitRestaurant);
+
+    await restaurantsDB.get().then(response => {
+      if (response.docs.length > 0) {
+        setStartRestorants(response.docs[response.docs.length - 1]);
+      } else {
+        setIsLoading(false);
+      }
+
+      /* recorriendo restoranes y guardandolos en el arreglo vacio */
+      response.forEach(doc => {
+        let restaurant = doc.data();
+        restaurant.id = doc.id;
+        resultRestaurants.push({ restaurant });
+      });
+
+      setRestaurants([...restaurants, ...resultRestaurants]);
+    });
+  };
 
   return (
     <View style={styles.viewBody}>
-      <ListRestaurant restaurants={restaurants} isLoading={isLoading} />
+      <ListRestaurant
+        navigation={navigation}
+        restaurants={restaurants}
+        isLoading={isLoading}
+        handleLoadMore={handleLoadMore}
+      />
       {/* condicion de si el user != null se muestra el componente */}
-      {user && <AddRestaurantButton navigation={navigation} />}
+      {user && (
+        <AddRestaurantButton
+          navigation={navigation}
+          setIsReloadRestaurants={setIsReloadRestaurants}
+        />
+      )}
     </View>
   );
 }
 
 /* funcion del button de agregar restauranes */
 function AddRestaurantButton(props) {
-  const { navigation } = props;
+  const { navigation, setIsReloadRestaurants } = props;
   return (
     <ActionButton
       buttonColor="#00a680"
-      onPress={() => navigation.navigate("AddRestaurant")}
+      onPress={() =>
+        navigation.navigate("AddRestaurant", { setIsReloadRestaurants })
+      }
     />
   );
 }

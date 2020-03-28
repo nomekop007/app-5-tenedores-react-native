@@ -18,7 +18,7 @@ const widthScreen = Dimensions.get("window").width;
 
 export default function AddRestaurantForm(props) {
   /* extrae las propiedades del appRestaurant a traves de props */
-  const { toastRef, setIsLoading, navigation } = props;
+  const { toastRef, setIsLoading, navigation, setIsReloadRestaurants } = props;
 
   /* funcion con array donde se guardan las imagenes seleccionadas */
   const [imagesSelected, setImageSeleted] = useState([]);
@@ -63,6 +63,7 @@ export default function AddRestaurantForm(props) {
           })
           .then(() => {
             setIsLoading(false);
+            setIsReloadRestaurants(true);
             navigation.navigate("Restaurants");
           })
           .catch(() => {

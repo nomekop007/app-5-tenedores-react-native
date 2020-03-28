@@ -11,21 +11,25 @@ import { Image } from "react-native-elements";
 import * as firebase from "firebase";
 
 export default function(props) {
-  const { restaurants, isLoading } = props;
+  const { restaurants, isLoading, handleLoadMore, navigation } = props;
 
   return (
     <View>
       {restaurants ? (
         <FlatList
           data={restaurants}
-          renderItem={restaurant => <Restaurant restaurant={restaurant} />}
+          renderItem={restaurant => (
+            <Restaurant navigation={navigation} restaurant={restaurant} />
+          )}
           keyExtractor={(item, index) => index.toString()}
-          //  onEndReached={}
+          onEndReached={handleLoadMore} /* listado q se cargara */
           onEndReachedThreshold={0}
-          //  ListFooterComponent={}
+          ListFooterComponent={
+            <FooterList isLoading={isLoading} />
+          } /* mensaje del final de la lista */
         />
       ) : (
-        <View style={styles.loadingRestaurants}>
+        <View style={styles.loaderRestorants}>
           <ActivityIndicator size="large" />
           <Text>Cargando restaurantes</Text>
         </View>
@@ -34,7 +38,7 @@ export default function(props) {
   );
 }
 function Restaurant(props) {
-  const { restaurant } = props;
+  const { restaurant, navigation } = props;
   const { name, address, description, images } = restaurant.item.restaurant;
   const [imageRestaurant, setImageRestaurant] = useState(null);
 
@@ -50,7 +54,9 @@ function Restaurant(props) {
   });
 
   return (
-    <TouchableOpacity onPress={() => console.log("ir al restaurante")}>
+    <TouchableOpacity
+      onPress={() => navigation.navigate("Restaurant", { restaurant })}
+    >
       <View style={styles.viewRestaurants}>
         <View style={styles.viewRestaurantImage}>
           <Image
@@ -71,6 +77,24 @@ function Restaurant(props) {
     </TouchableOpacity>
   );
 }
+
+function FooterList(props) {
+  const { isLoading } = props;
+  if (isLoading) {
+    return (
+      <View style={styles.loadingRestaurants}>
+        <ActivityIndicator size="large" />
+      </View>
+    );
+  } else {
+    return (
+      <View style={styles.notFoundRestaurants}>
+        <Text>No quedan restaurantes por cargar</Text>
+      </View>
+    );
+  }
+}
+
 const styles = StyleSheet.create({
   loadingRestaurants: {
     marginTop: 20,
@@ -98,5 +122,14 @@ const styles = StyleSheet.create({
     paddingTop: 2,
     color: "grey",
     width: 300
+  },
+  loaderRestorants: {
+    marginTop: 10,
+    marginBottom: 10
+  },
+  notFoundRestaurants: {
+    marginTop: 10,
+    marginTop: 20,
+    alignItems: "center"
   }
 });
