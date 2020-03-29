@@ -27,6 +27,8 @@ export default function AddRestaurantForm(props) {
   const [restaurantName, setsrestaurantName] = useState("");
   const [restaurantAddress, setrestaurantAddress] = useState("");
   const [restaurantDescription, setrestaurantDescription] = useState("");
+  const [restaurantEmail, setrestaurantEmail] = useState("");
+  const [restaurantNumber, setrestaurantNumber] = useState("");
 
   /* estados para el componente map */
   const [isVisibleMap, setIsVisibleMap] = useState(false);
@@ -34,7 +36,13 @@ export default function AddRestaurantForm(props) {
 
   /* funcion agregar y validar restaurante */
   const addRestaurante = () => {
-    if (!restaurantName || !restaurantAddress || !restaurantDescription) {
+    if (
+      !restaurantName ||
+      !restaurantAddress ||
+      !restaurantDescription ||
+      !restaurantEmail ||
+      !restaurantNumber
+    ) {
       toastRef.current.show(
         "Todos los Campos del formularios son obligatorios"
       );
@@ -53,6 +61,8 @@ export default function AddRestaurantForm(props) {
             name: restaurantName,
             address: restaurantAddress,
             description: restaurantDescription,
+            email: restaurantEmail,
+            number: restaurantNumber,
             location: locationRestaurant,
             images: arrayImages,
             rating: 0,
@@ -107,6 +117,8 @@ export default function AddRestaurantForm(props) {
         setsrestaurantName={setsrestaurantName}
         setrestaurantAddress={setrestaurantAddress}
         setrestaurantDescription={setrestaurantDescription}
+        setrestaurantEmail={setrestaurantEmail}
+        setrestaurantNumber={setrestaurantNumber}
         setIsVisibleMap={setIsVisibleMap}
         locationRestaurant={locationRestaurant}
       />
@@ -238,6 +250,8 @@ function FormAdd(props) {
     setsrestaurantName,
     setrestaurantAddress,
     setrestaurantDescription,
+    setrestaurantEmail,
+    setrestaurantNumber,
     setIsVisibleMap,
     locationRestaurant
   } = props;
@@ -259,6 +273,16 @@ function FormAdd(props) {
           onPress: () => setIsVisibleMap(true)
         }}
         onChange={e => setrestaurantAddress(e.nativeEvent.text)}
+      />
+      <Input
+        placeholder="Email de restaurante"
+        containerStyle={styles.input}
+        onChange={e => setrestaurantEmail(e.nativeEvent.text)}
+      />
+      <Input
+        placeholder="Numero del restaurante"
+        containerStyle={styles.input}
+        onChange={e => setrestaurantNumber(e.nativeEvent.text)}
       />
       <Input
         placeholder="Descripcion del Restaurante"

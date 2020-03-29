@@ -7,5 +7,6 @@ export default function App() {
   /* quitar advertencias */
   ignoreWarnings("Setting a timer");
   ignoreWarnings("Warning: componentWillReceiveProps");
+  ignoreWarnings("Warning: componentWillMount");
   return <Navigation />;
 }
