@@ -8,5 +8,6 @@ export default function App() {
   ignoreWarnings("Setting a timer");
   ignoreWarnings("Warning: componentWillReceiveProps");
   ignoreWarnings("Warning: componentWillMount");
+  ignoreWarnings("VirtualizedLists should never");
   return <Navigation />;
 }
