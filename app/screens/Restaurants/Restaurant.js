@@ -16,7 +16,7 @@ const screenWidth = Dimensions.get("window").width;
 export default function Restaurant(props) {
   const { navigation } = props;
   /* extrae el restorante de los params enviados de los props */
-  const { restaurant } = navigation.state.params.restaurant.item;
+  const { restaurant } = navigation.state.params;
 
   /* array para el carrucel de imagenes */
   const [imagesRestorant, setImagesRestorant] = useState([]);
@@ -24,8 +24,15 @@ export default function Restaurant(props) {
   const [rating, setRating] = useState(restaurant.rating);
   /* estado de favorito */
   const [isFavorite, setIsFavorite] = useState(false);
+
+  /* validar si el usuario esta logeado o no */
+  const [userLogged, setUserLogged] = useState(false);
   /* iniciar el toast */
   const toastRef = useRef();
+
+  firebase.auth().onAuthStateChanged(user => {
+    user ? setUserLogged(true) : setUserLogged(false);
+  });
 
   /* octener el carrucel de imagenes del restorant */
   useEffect(() => {
@@ -51,36 +58,45 @@ export default function Restaurant(props) {
 
   /* octener si el restorante es favorito de este usuario o no */
   useEffect(() => {
-    /* consulta con where en la base de datos para devolver solo un campo */
-    db.collection("favorites")
-      .where("idRestaurant", "==", restaurant.id)
-      .where("idUser", "==", firebase.auth().currentUser.uid)
-      .get()
-      .then(response => {
-        if (response.docs.length === 1) {
-          setIsFavorite(true);
-        }
-      });
+    if (userLogged) {
+      /* consulta con where en la base de datos para devolver solo un campo */
+      db.collection("favorites")
+        .where("idRestaurant", "==", restaurant.id)
+        .where("idUser", "==", firebase.auth().currentUser.uid)
+        .get()
+        .then(response => {
+          if (response.docs.length === 1) {
+            setIsFavorite(true);
+          }
+        });
+    }
   }, []);
 
   /* funciones para agregar y borrar favorito */
   const addFavorite = () => {
-    /* crear objeto que se guardara en base de datos */
-    const payload = {
-      idUser: firebase.auth().currentUser.uid,
-      idRestaurant: restaurant.id
-    };
-    db.collection("favorites")
-      .add(payload)
-      .then(() => {
-        setIsFavorite(true);
-        toastRef.current.show("Restorante añadido a la lista de favoritos");
-      })
-      .catch(() => {
-        toastRef.current.show(
-          "Error al añadir el restorante a la lista de favoritos, intentelo mas tarde"
-        );
-      });
+    if (!userLogged) {
+      toastRef.current.show(
+        "Para usar sistema de favoritos tienes que estar logeado",
+        3000
+      );
+    } else {
+      /* crear objeto que se guardara en base de datos */
+      const payload = {
+        idUser: firebase.auth().currentUser.uid,
+        idRestaurant: restaurant.id
+      };
+      db.collection("favorites")
+        .add(payload)
+        .then(() => {
+          setIsFavorite(true);
+          toastRef.current.show("Restorante añadido a la lista de favoritos");
+        })
+        .catch(() => {
+          toastRef.current.show(
+            "Error al añadir el restorante a la lista de favoritos, intentelo mas tarde"
+          );
+        });
+    }
   };
   const removeFavorite = () => {
     db.collection("favorites")
