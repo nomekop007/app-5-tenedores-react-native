@@ -30,7 +30,8 @@ export default function Restaurant(props) {
   /* iniciar el toast */
   const toastRef = useRef();
 
-  firebase.auth().onAuthStateChanged(user => {
+  /* ERROR EN VER SI ESTA LOGEADO */
+  firebase.auth().onAuthStateChanged((user) => {
     user ? setUserLogged(true) : setUserLogged(false);
   });
 
@@ -40,12 +41,12 @@ export default function Restaurant(props) {
     (async () => {
       await Promise.all(
         /* recorre(map) y extrae todas las fotos y las guarda en el array */
-        restaurant.images.map(async idImage => {
+        restaurant.images.map(async (idImage) => {
           await firebase
             .storage()
             .ref(`restaurant-images/${idImage}`)
             .getDownloadURL()
-            .then(imageURl => {
+            .then((imageURl) => {
               /* se agrega la imagen al array */
               arrayUrls.push(imageURl);
             });
@@ -64,7 +65,7 @@ export default function Restaurant(props) {
         .where("idRestaurant", "==", restaurant.id)
         .where("idUser", "==", firebase.auth().currentUser.uid)
         .get()
-        .then(response => {
+        .then((response) => {
           if (response.docs.length === 1) {
             setIsFavorite(true);
           }
@@ -83,7 +84,7 @@ export default function Restaurant(props) {
       /* crear objeto que se guardara en base de datos */
       const payload = {
         idUser: firebase.auth().currentUser.uid,
-        idRestaurant: restaurant.id
+        idRestaurant: restaurant.id,
       };
       db.collection("favorites")
         .add(payload)
@@ -103,9 +104,9 @@ export default function Restaurant(props) {
       .where("idRestaurant", "==", restaurant.id)
       .where("idUser", "==", firebase.auth().currentUser.uid)
       .get()
-      .then(response => {
+      .then((response) => {
         /* se octiene el response (objeto de la base de datos) */
-        response.forEach(doc => {
+        response.forEach((doc) => {
           /* extrae la id del response */
           const idFavorite = doc.id;
           /* se busca el objeto on la idfavorite y se elimina de la db */
@@ -197,20 +198,20 @@ function RestaurantInfo(props) {
       text: address,
       iconName: "map-marker",
       iconType: "material-community",
-      action: null
+      action: null,
     },
     {
       text: number,
       iconName: "phone",
       iconType: "material-community",
-      action: null
+      action: null,
     },
     {
       text: email,
       iconName: "at",
       iconType: "material-community",
-      action: null
-    }
+      action: null,
+    },
   ];
   return (
     <View style={styles.viewRestaurantInfo}>
@@ -225,7 +226,7 @@ function RestaurantInfo(props) {
           leftIcon={{
             name: item.iconName,
             type: item.iconType,
-            color: "#00a680"
+            color: "#00a680",
           }}
           containerStyle={styles.containerListItem}
         />
@@ -236,7 +237,7 @@ function RestaurantInfo(props) {
 
 const styles = StyleSheet.create({
   viewBody: {
-    flex: 1
+    flex: 1,
   },
   viewFavorite: {
     position: "absolute",
@@ -248,34 +249,34 @@ const styles = StyleSheet.create({
     paddingTop: 5,
     paddingBottom: 5,
     paddingLeft: 15,
-    paddingRight: 5
+    paddingRight: 5,
   },
   viewRestorantTitle: {
-    margin: 15
+    margin: 15,
   },
   nameRestorant: {
     fontSize: 20,
-    fontWeight: "bold"
+    fontWeight: "bold",
   },
   rating: {
     position: "absolute",
-    right: 0
+    right: 0,
   },
   descriptionRestorant: {
     marginTop: 20,
-    color: "grey"
+    color: "grey",
   },
   viewRestaurantInfo: {
     margin: 15,
-    marginTop: 25
+    marginTop: 25,
   },
   restaurantInfoTitle: {
     fontSize: 20,
     fontWeight: "bold",
-    marginBottom: 10
+    marginBottom: 10,
   },
   containerListItem: {
     borderBottomColor: "#d8d8d8",
-    borderBottomWidth: 1
-  }
+    borderBottomWidth: 1,
+  },
 });

@@ -6,7 +6,7 @@ import {
   FlatList,
   ActivityIndicator,
   TouchableOpacity,
-  Alert
+  Alert,
 } from "react-native";
 import { Image, Icon, Button } from "react-native-elements";
 import Loading from "../components/Loading";
@@ -29,7 +29,7 @@ export default function Favorites(props) {
   const [userLogged, setUserLogged] = useState(false);
   const toastRef = useRef();
 
-  firebase.auth().onAuthStateChanged(user => {
+  firebase.auth().onAuthStateChanged((user) => {
     user ? setUserLogged(true) : setUserLogged(false);
   });
 
@@ -41,18 +41,18 @@ export default function Favorites(props) {
       db.collection("favorites")
         .where("idUser", "==", idUser)
         .get()
-        .then(response => {
+        .then((response) => {
           /* recorre el response y va guardando las ids en el array */
           const idRestaurantsArray = [];
-          response.forEach(doc => {
+          response.forEach((doc) => {
             idRestaurantsArray.push(doc.data().idRestaurant);
           });
 
           /* se pasa el arrays de ids */
-          getDataRestaurants(idRestaurantsArray).then(response => {
+          getDataRestaurants(idRestaurantsArray).then((response) => {
             /* se devuelven todos los restauranes */
             const restaurants = [];
-            response.forEach(doc => {
+            response.forEach((doc) => {
               let restaurant = doc.data();
               restaurant.id = doc.id;
               restaurants.push(restaurant);
@@ -66,13 +66,10 @@ export default function Favorites(props) {
 
   /* funcion que devolvera todos los restaurantes 
   en base al arrays de ids de los restauranes */
-  const getDataRestaurants = idRestaurantsArray => {
+  const getDataRestaurants = (idRestaurantsArray) => {
     const arrayRestaurants = [];
-    idRestaurantsArray.forEach(idRestaurant => {
-      const result = db
-        .collection("restaurants")
-        .doc(idRestaurant)
-        .get();
+    idRestaurantsArray.forEach((idRestaurant) => {
+      const result = db.collection("restaurants").doc(idRestaurant).get();
 
       arrayRestaurants.push(result);
     });
@@ -103,7 +100,7 @@ export default function Favorites(props) {
         /* flatlist renderisa los items del arrays */
         <FlatList
           data={restaurants}
-          renderItem={restaurant => (
+          renderItem={(restaurant) => (
             <Restorant
               setIsVisibleLoading={setIsVisibleLoading}
               setReloadRestaurants={setReloadRestaurants}
@@ -134,7 +131,7 @@ function Restorant(props) {
     restaurant,
     setIsVisibleLoading,
     setReloadRestaurants,
-    toastRef
+    toastRef,
   } = props;
 
   const { id, name, images } = restaurant.item;
@@ -148,7 +145,7 @@ function Restorant(props) {
       .storage()
       .ref(`restaurant-images/${image}`)
       .getDownloadURL()
-      .then(response => {
+      .then((response) => {
         setImageRestaurant(response);
       });
   }, []);
@@ -161,12 +158,12 @@ function Restorant(props) {
       [
         {
           text: "Cancel",
-          style: "cancel"
+          style: "cancel",
         },
         {
           text: "Eliminar",
-          onPress: removeFavorite
-        }
+          onPress: removeFavorite,
+        },
       ],
       { cancelable: false }
     );
@@ -180,8 +177,8 @@ function Restorant(props) {
       .where("idRestaurant", "==", id)
       .where("idUser", "==", firebase.auth().currentUser.uid)
       .get()
-      .then(response => {
-        response.forEach(doc => {
+      .then((response) => {
+        response.forEach((doc) => {
           const idFavorite = doc.id;
           db.collection("favorites")
             .doc(idFavorite)
@@ -265,18 +262,18 @@ function UserNoLogged(props) {
 const styles = StyleSheet.create({
   loaderRestaurants: {
     marginTop: 10,
-    marginBottom: 10
+    marginBottom: 10,
   },
   viewBody: {
     flex: 1,
-    backgroundColor: "#f2f2f2"
+    backgroundColor: "#f2f2f2",
   },
   restaurant: {
-    margin: 10
+    margin: 10,
   },
   image: {
     width: "100%",
-    height: 180
+    height: 180,
   },
   info: {
     flex: 1,
@@ -288,16 +285,16 @@ const styles = StyleSheet.create({
     paddingTop: 10,
     paddingBottom: 10,
     marginTop: -30,
-    backgroundColor: "#fff"
+    backgroundColor: "#fff",
   },
   name: {
     fontWeight: "bold",
-    fontSize: 20
+    fontSize: 20,
   },
   favorite: {
     marginTop: -35,
     backgroundColor: "#fff",
     padding: 15,
-    borderRadius: 100
-  }
+    borderRadius: 100,
+  },
 });
